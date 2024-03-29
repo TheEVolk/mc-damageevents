@@ -16,11 +16,13 @@ public class LivingEntityMixin {
     @Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/LivingEntity;applyDamage(Lnet/minecraft/entity/damage/DamageSource;F)V"))
 	private void onDamageLivingEntity(DamageSource source, float amount, final CallbackInfoReturnable<Boolean> info) {
-        var living = (LivingEntity) (Object) this;
-        if (!living.getUuid().equals(MinecraftClient.getInstance().player.getUuid())) {
-            return;
-        }
-
-        DamageeventClient.instance.dispatch();
+        try {
+            var living = (LivingEntity) (Object) this;
+            if (!living.getUuid().equals(MinecraftClient.getInstance().player.getUuid())) {
+                return;
+            }
+    
+            DamageeventClient.instance.dispatch();
+        } catch (Exception ignore) { }
 	}
 }
